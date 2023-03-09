@@ -1,0 +1,11 @@
+#! /bin/sh
+
+#Drawing the winning lottery numbers
+
+NUMBERS=$(seq 50 | shuf | head -5)
+BONUS=$(seq 10 | shuf | head -1)
+
+DATE=$(date '+%Y%m%d')
+LOTFILE=./lotnum.$DATE.out
+echo $NUMBERS > $LOTFILE
+echo $BONUS >> $LOTFILE

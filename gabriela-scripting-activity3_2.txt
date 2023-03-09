@@ -1,0 +1,80 @@
+#! /bin/sh 
+
+DATE=$(date '+%Y%m%d')
+LOTFILE=./lotnum.$DATE.out
+MATCHING=()
+
+if [ ! -f $LOTFILE ]
+then 
+	echo Winning lottery number not found 
+	exit 0
+else
+	LOT=($(head -1 $LOTFILE))
+	BONUS=($(tail -1 $LOTFILE))
+	echo ${LOT[*]} ${BONUS[*]}
+fi
+
+echo Please enter your 5 numbers:
+read -a LOTNUMS
+
+LOTNUMSU=($(for n in "${LOTNUMS[@]}"; do echo "${n}"; done | sort -u))
+GT50=0
+
+for i in {0..4}
+do
+	if [[ ${LOTNUMS[$i]} -gt 50 || ${LOTNUMS[$i]} -lt 1 ]]
+	then
+		(( GT50++ ))
+	fi
+done			
+
+if [ ${#LOTNUMS[*]} -ne 5 ]
+then
+	echo You did not provide 5 numbers
+elif [ ${#LOTNUMSU[*]} -ne 5 ]
+then
+	echo You provided the same number twice 
+elif [ $GT50 -gt 0 ]
+then
+	echo You have at least 1 number lower than 1 or greater than 50
+else 
+	echo Your numbers are ${LOTNUMS[*]}
+fi
+
+echo Great now enter your bonus number:
+read -a BONUSNUM
+
+if [ ${#BONUSNUM[*]} -ne 1 ]
+then
+        echo You did not provide 1 number
+elif [[ ${BONUSNUM[*]} -gt 10 || ${BONUSNUM[*]} -lt 1 ]]
+then
+	echo Your bonus number is not within 1-10
+else 
+	echo Your bonus number is ${BONUSNUM[*]}
+fi
+
+for i in {0..4}
+do
+	if [ ${LOTNUMS[$i]} -eq ${LOT[$i]} ]
+	then 
+		MATCHING+=("${LOTNUMS[$i]}")
+	fi
+done
+
+if [ ${BONUSNUM[*]} -eq ${BONUS[*]} ]
+then 
+	MATCHING+=("${BONUSNUM[*]}")
+	echo You matched the bonus\!
+else 
+	echo Oh no\! You did not match the bonus.
+fi
+
+echo Your matching numbers are ${MATCHING[*]}
+
+if [ ${#MATCHING[*]} -eq 6 ]
+then 
+	echo You won\!
+else 
+	echo You did not win this lottery.
+fi

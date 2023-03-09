@@ -1,0 +1,16 @@
+#! /bin/sh
+
+export TZ=EST
+DATE="date +%d.%m.%Y"
+TIME="date +%H:%M"
+DIRECTORY=`pwd`
+FILES=$(ls -l | grep -e ^[^dt]rw | wc -l)
+BIG_FILE=$(ls -S1 | head -n 1)
+
+echo Your username is $USER
+echo The date today is $($DATE)
+echo The time right now is $($TIME)
+echo Your current directory is $DIRECTORY
+echo You have $FILES files in this directory
+echo Your biggest file is $BIG_FILE
+ 
