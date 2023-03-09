@@ -3,6 +3,8 @@
 DATE=$(date '+%Y%m%d')
 LOTFILE=./lotnum.$DATE.out
 MATCHING=()
+ERROR=1
+ERROR2=1
 
 if [ ! -f $LOTFILE ]
 then 
@@ -11,48 +13,65 @@ then
 else
 	LOT=($(head -1 $LOTFILE))
 	BONUS=($(tail -1 $LOTFILE))
+	echo The winning lottery numbers are:
 	echo ${LOT[*]} ${BONUS[*]}
+	sleep 1
 fi
 
-echo Please enter your 5 numbers:
-read -a LOTNUMS
-
-LOTNUMSU=($(for n in "${LOTNUMS[@]}"; do echo "${n}"; done | sort -u))
-GT50=0
-
-for i in {0..4}
+until [ $ERROR -eq 0 ]
 do
-	if [[ ${LOTNUMS[$i]} -gt 50 || ${LOTNUMS[$i]} -lt 1 ]]
+	echo Please enter your 5 numbers:
+	read -a LOTNUMS
+
+	LOTNUMSU=($(for n in "${LOTNUMS[@]}"; do echo "${n}"; done | sort -u))
+	GT50=0
+
+	for i in {0..4}
+	do
+		if [[ ${LOTNUMS[$i]} -gt 50 || ${LOTNUMS[$i]} -lt 1 ]]
+		then
+			(( GT50++ ))
+		fi
+	done			
+
+	if [ ${#LOTNUMS[*]} -ne 5 ]
 	then
-		(( GT50++ ))
+		echo You did not provide 5 numbers
+		sleep 1
+	elif [ ${#LOTNUMSU[*]} -ne 5 ]
+	then
+		echo You provided the same number twice 
+		sleep 1
+	elif [ $GT50 -gt 0 ]
+	then
+		echo You have at least 1 number lower than 1 or greater than 50
+		sleep 1
+	else 
+		echo Your numbers are ${LOTNUMS[*]}
+		sleep 1
+		ERROR=0
 	fi
-done			
+done 
 
-if [ ${#LOTNUMS[*]} -ne 5 ]
-then
-	echo You did not provide 5 numbers
-elif [ ${#LOTNUMSU[*]} -ne 5 ]
-then
-	echo You provided the same number twice 
-elif [ $GT50 -gt 0 ]
-then
-	echo You have at least 1 number lower than 1 or greater than 50
-else 
-	echo Your numbers are ${LOTNUMS[*]}
-fi
+until [ $ERROR2 -eq 0 ]
+do
+	echo Great now enter your bonus number:
+	read -a BONUSNUM
 
-echo Great now enter your bonus number:
-read -a BONUSNUM
-
-if [ ${#BONUSNUM[*]} -ne 1 ]
-then
-        echo You did not provide 1 number
-elif [[ ${BONUSNUM[*]} -gt 10 || ${BONUSNUM[*]} -lt 1 ]]
-then
-	echo Your bonus number is not within 1-10
-else 
-	echo Your bonus number is ${BONUSNUM[*]}
-fi
+	if [ ${#BONUSNUM[*]} -ne 1 ]
+	then
+        	echo You did not provide 1 number
+		sleep 1
+	elif [[ ${BONUSNUM[*]} -gt 10 || ${BONUSNUM[*]} -lt 1 ]]
+	then
+		echo Your bonus number is not within 1-10
+		sleep 1
+	else 
+		echo Your bonus number is ${BONUSNUM[*]}
+		sleep 1
+		ERROR2=0
+	fi
+done
 
 for i in {0..4}
 do
@@ -66,11 +85,14 @@ if [ ${BONUSNUM[*]} -eq ${BONUS[*]} ]
 then 
 	MATCHING+=("${BONUSNUM[*]}")
 	echo You matched the bonus\!
+	sleep 1
 else 
 	echo Oh no\! You did not match the bonus.
+	sleep 1
 fi
 
 echo Your matching numbers are ${MATCHING[*]}
+sleep 1
 
 if [ ${#MATCHING[*]} -eq 6 ]
 then 
