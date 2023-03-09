@@ -1,0 +1,45 @@
+#! /bin/sh
+
+ERROR=1
+
+function check_lenght()
+{
+	if [ ${#$1} -lt 9 ]
+	then
+		echo Your password is too short
+		echo Please try again
+		return 1
+	else 
+		return 0
+	fi
+}
+
+function check_alphanumeric()
+{
+	if [[ ! $1 =~ [a-zA-Z0-9] ]]
+	then
+		echo Your password does not have both lower and upper case letters or does not have a number
+		echo Please try again
+		return 1
+	else 
+		return 0
+	fi
+}
+
+echo Hello $USER
+
+until [ $ERROR -eq 0 ]
+do
+	echo Please enter your new password:
+	read PASSWORD
+	echo $PASSWORD
+	
+	check_length $PASSWORD
+	$check_alphanumeric $PASSWORD
+	if [ $check_length $PASSWORD ] && [ $check_alphanumeric $PASSWORD ]
+	then
+		ERROR=0
+	fi
+done
+
+echo Great you have changed your password successfully
