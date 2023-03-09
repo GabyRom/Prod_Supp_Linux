@@ -1,0 +1,59 @@
+#! /bin/sh
+
+COUNT=1
+NUMBERS=()
+
+# Asking for user input
+echo Hello please enter 5-10 numbers 1 by 1, enter n if you want to stop
+sleep 1
+until [ $COUNT -gt 10 ]
+do 
+	echo Enter number $COUNT 
+	read NUM
+	if [[ $NUM == n && $COUNT -gt 5 ]]
+	then
+		echo You entered ${#NUMBERS[*]} numbers
+		break
+	elif [[ $NUM == n && $COUNT -lt 6 ]]
+	then
+		echo You have only entered $COUNT numbers please try again
+		continue
+	fi
+	NUMBERS+=("$NUM")
+	(( COUNT++ ))
+done
+
+# Performing desired tasks
+PRODUCT=1
+NUMS=${#NUMBERS[*]}
+SUM=0
+MIN=${NUMBERS[0]}
+MAX=${NUMBERS[0]}
+AVERAGE=
+
+for i in ${NUMBERS[*]}
+do
+	(( PRODUCT=$PRODUCT*$i ))
+	(( SUM=$SUM+$i ))
+	
+	if [ $MIN -gt $i ]
+	then
+		MIN=$i
+	fi
+	
+	if [ $MAX -lt $i ]
+	then
+		MAX=$i
+	fi
+done
+
+(( AVERAGE=$PRODUCT/$NUMS ))
+
+# Print results out
+echo Your numbers are ${NUMBERS[*]}
+echo The product of your numbers is $PRODUCT
+echo The sum is $SUM
+echo The smalles number is $MIN
+echo The largest number is $MAX
+echo And the average of your numbers is $AVERAGE
+
