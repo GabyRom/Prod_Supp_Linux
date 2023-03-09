@@ -2,9 +2,10 @@
 
 ERROR=1
 
-function check_lenght()
+function check_length()
 {
-	if [ ${#$1} -lt 9 ]
+	local pass="$1"
+	if [ ${#pass} -lt 9 ]
 	then
 		echo Your password is too short
 		echo Please try again
@@ -16,7 +17,8 @@ function check_lenght()
 
 function check_alphanumeric()
 {
-	if [[ ! $1 =~ [a-zA-Z0-9] ]]
+	local pass="$1"
+	if [[ ! $pass =~ [a-zA-Z0-9] ]]
 	then
 		echo Your password does not have both lower and upper case letters or does not have a number
 		echo Please try again
@@ -34,9 +36,9 @@ do
 	read PASSWORD
 	echo $PASSWORD
 	
-	check_length $PASSWORD
-	$check_alphanumeric $PASSWORD
-	if [ $check_length $PASSWORD ] && [ $check_alphanumeric $PASSWORD ]
+	check_length "$PASSWORD"
+	check_alphanumeric "$PASSWORD"
+	if [ check_length "$PASSWORD" ] && [ check_alphanumeric "$PASSWORD" ]
 	then
 		ERROR=0
 	fi
