@@ -1,0 +1,10 @@
+#! /bin/sh
+
+# Read the file sort the numbers
+NUMFILE=./gabriela-scripting-activity11_text.txt
+
+NUMBERS=($(head -1 $NUMFILE))
+NUMBERSU=($(for n in "${NUMBERS[@]}"; do echo "${n}"; done | sort -nur))
+
+echo ${NUMBERSU[*]}
+
