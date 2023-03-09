@@ -4,7 +4,7 @@ COUNT=1
 NUMBERS=()
 
 # Asking for user input
-echo Hello please enter 5-10 numbers 1 by 1, enter n if you want to stop
+echo Hello please enter 5-10 integers 1 by 1, enter n if you want to stop
 sleep 1
 until [ $COUNT -gt 10 ]
 do 
@@ -16,7 +16,11 @@ do
 		break
 	elif [[ $NUM == n && $COUNT -lt 6 ]]
 	then
-		echo You have only entered $COUNT numbers please try again
+		echo "You have only entered $(( $COUNT-1 )) numbers please try again"
+		continue
+	elif [[ ! $NUM =~ ([0-9]) ]]
+	then 
+		echo You did not enter a number
 		continue
 	fi
 	NUMBERS+=("$NUM")
@@ -47,7 +51,7 @@ do
 	fi
 done
 
-(( AVERAGE=$PRODUCT/$NUMS ))
+(( AVERAGE=$SUM/$NUMS ))
 
 # Print results out
 echo Your numbers are ${NUMBERS[*]}
