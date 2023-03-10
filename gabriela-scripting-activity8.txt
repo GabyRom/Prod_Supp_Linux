@@ -51,7 +51,7 @@ do
 	fi
 done
 
-(( AVERAGE=$SUM/$NUMS ))
+AVERAGE=$(echo "scale=2;$SUM/$NUMS" | bc)
 
 # Print results out
 echo Your numbers are ${NUMBERS[*]}
